@@ -1,0 +1,24 @@
+﻿@model IEnumerable<AcadProgram>
+
+@if (Model != null && Model.Count() > 0)
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Academic Program Name</th>
+                <th>Quota</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var acadprogram in Model)
+            {
+                <tr class="program-row" program-id="@acadprogram.ProgramId">
+
+                    <td>@acadprogram.Name</td>
+                    <td>@acadprogram.Quantity</td>
+                
+                </tr>
+            }
+        </tbody>
+    </table>
+}

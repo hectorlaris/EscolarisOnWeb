@@ -1,0 +1,45 @@
+﻿@model List<AcadProgram>
+
+@section title {
+	<h3>Academic Programs</h3>
+}
+
+@* validar ó ir  ala defensiva*@
+@if (Model != null && Model.Count() > 0)
+{
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Category Name</th>
+				<th>Program Name</th>
+				<th>Price</th>
+				<th>Quota</th>
+				<th></th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var acadprogram in Model)
+			{
+				<tr>
+					<td>@acadprogram.Category?.Name</td>
+					<td>@acadprogram.Name</td>
+					<td>@acadprogram.Price?.ToString("c")</td>
+					<td>@acadprogram.Quantity</td>
+					<td><a class="btn btn-link" asp-controller="acadprograms" asp-action="edit" asp-route-id="@acadprogram.ProgramId">Edit</a></td>
+					<td><a class="btn btn-link" asp-controller="acadprograms" asp-action="delete" asp-route-id="@acadprogram.ProgramId" onclick="return confirmDelete()">Delete</a></td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+<br />
+<a class="btn btn-primary" asp-controller="AcadPrograms" asp-action="add">Add</a>
+
+@section Scripts {
+	<script>
+		function confirmDelete() {
+			return confirm("Are you sure you want to delete this Academic Program?");
+		}
+	</script>
+}

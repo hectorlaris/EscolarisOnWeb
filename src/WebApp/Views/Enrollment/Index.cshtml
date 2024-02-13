@@ -1,0 +1,141 @@
+﻿@model EnrollmentViewModel
+
+@section title {
+    <div class="row">
+        <div class="col-7"><h3>Enroll's Console</h3></div>
+        <div class="col-2"><label for="cashier">Register Name:</label></div>
+        <div class="col-3">
+            @* Display Register's name here *@
+            @User?.Identity?.Name
+        </div>
+    </div>
+}
+
+<br />
+
+<div class="row">
+    <div class="col-4">
+
+        <div class="text-danger" asp-validation-summary="All"></div>
+        @* Category selection *@
+
+        <select asp-for="SelectedCategoryId" class="form-control">
+            <option>- Please Select -</option>
+            @if (Model.Categories != null && Model.Categories.Count() > 0)
+            {
+                @foreach (var cat in Model.Categories)
+                {
+                    <option value="@cat.CategoryId">@cat.Name</option>
+                }
+            }
+        </select>
+        <br />
+
+        <div id="acadprogramsPartial">
+            @* Programs List *@
+        </div>
+        <br />
+
+        <div id="acadprogramDetailpartial">
+            @* Academic Program Details *@
+        </div>
+
+        @* Enrollment form *@
+        <form method="post" asp-controller="Enrollment" asp-action="enroll" id="formEnrollment">
+            <input asp-for="SelectedAcadProgramId" type="hidden" />
+            <div class="form-group">
+                <label asp-for="QuantityToEnroll"></label>
+                <input asp-for="QuantityToEnroll" class="form-control" type="number" min="1" />
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Submit" />
+            </div>
+        </form>
+
+    </div>
+    <div class="col">
+        @* List of transactions *@
+        @await Component.InvokeAsync("Transactions", "HectorSL")
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // seleccionar categoria filtar AcadPrograms
+        $(function () {
+
+            //43-3 Initialize the form, aun no se ha seleccionado programa entonces hide
+            $("#formEnrollment").hide();
+            $("#QuantityToEnroll").val("");
+
+            // Load the programs if category is already selected
+            var selectedCategoryId = $("#SelectedCategoryId").val();
+            //alert(selectedCategoryId);
+
+            if (selectedCategoryId > 0) {
+                loadAcadprograms(selectedCategoryId);
+            }
+
+            // Handle category selection usando método del Controller /acadprograms/AcadProgramsByCategoryPartial
+            // the Controller combines the Model with the View and generates the HTML
+            $("#SelectedCategoryId").on("change", function () {
+
+                // $("#acadprogramsPartial").load("/acadprograms/AcadProgramsByCategoryPartial", { categoryId:$(this).val()});
+
+                // // //To clear the content inside the product detail
+                // $("#acadprogramDetailpartial").html("");
+
+                // //To clear the content inside the format enrollment
+                // $("#formEnrollment").hide();
+
+                // se necesita màs de una vez, entonces se creò una funciòn
+                loadAcadprograms($(this).val());
+
+            });
+
+            // Handle AcadProgram
+            $("#acadprogramsPartial").on('click', '.program-row', function () {
+
+                // highlight the row selected
+                $('.program-row').removeClass('highlight');
+                $(this).addClass('highlight');
+
+                //41. Get the acadprogram ID from the "program-id="acadprogram.ProgramId" atribute of the clicked row
+                // parametro se debe llamara igual que en el metodo
+                var acadprogramId = $(this).attr('program-id');
+                // alert(acadprogramId);
+
+                // 42. part II Load the details of the academica program in a partial view
+                //  usando método del Controller /Enrollment/EnrollAcadProgramPartial
+                // the Controller combines the Model with the View and generates the HTML
+
+                $("#acadprogramDetailpartial").load("/Enrollment/EnrollAcadProgramPartial", { acadprogramId: acadprogramId });
+
+                //43. Para hacer el enrollment válidamos si acadprogramId > 0
+                if (acadprogramId > 0) {
+                    $("#SelectedAcadProgramId").val(acadprogramId);
+                    $("#formEnrollment").show();
+                }
+                else {
+                    $("#SelectedAcadProgramId").val("");
+                    $("#formEnrollment").hide();
+                }
+
+            });
+
+        });
+
+        function loadAcadprograms(categoryId) {
+
+            $("#acadprogramsPartial").load("/enrollment/AcadProgramsByCategoryPartial", { categoryId: categoryId });
+
+            //To clear the content inside the product detail
+            $("#acadprogramDetailpartial").html("");
+
+            //To clear the content inside the format enrollment
+            $("#formEnrollment").hide();
+        }
+    </script>
+}
