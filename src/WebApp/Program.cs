@@ -1,3 +1,5 @@
+// Testing my PR
+
 using Microsoft.EntityFrameworkCore;
 using Plugins.DataStore.SQL;
 using UseCases;
@@ -72,7 +74,7 @@ app.UseRouting();
 // add contidions of authentication and authorization
 // Every web request that goes to the App it's going to 
 // check the identify to know who is the user, and then it's to
-// going to verify the user´s permission with the authorzation middlware.
+// going to verify the userÂ´s permission with the authorzation middlware.
 
 app.UseAuthentication();
 app.UseAuthorization();
