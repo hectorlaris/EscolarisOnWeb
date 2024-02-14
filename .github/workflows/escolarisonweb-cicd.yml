@@ -26,7 +26,7 @@ jobs:
         include-prerelease: true
     #Build/Test/Publish the .net project
     - name: Build with dotnet
-      run: dotnet build ./EscolarisOnWeb/EscolarisOnWeb.sln --configuration Release
+      run: dotnet build ./EscolarisOnWeb.sln --configuration Release
     #- name: Test with dotnet
     #  run: dotnet test ./EscolarisOnWeb.sln --configuration Release
     - name: dotnet publish
