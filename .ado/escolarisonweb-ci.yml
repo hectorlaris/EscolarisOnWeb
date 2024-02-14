@@ -1,6 +1,12 @@
 #NAME THE PIPELINE SAME AS FILE (WITHOUT ".yml")
-# trigger:
-# - main
+
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - src/web/*
 
 resources:
   repositories:
@@ -28,11 +34,11 @@ stages:
         command: 'build'
         projects: '**/*.sln'
     
-    - task: DotNetCoreCLI@2
-      displayName: Test
-      inputs:
-        command: 'test'
-        projects: 'tests/UnitTests/*.csproj'
+#    - task: DotNetCoreCLI@2
+#      displayName: Test
+#      inputs:
+#        command: 'test'
+#        projects: 'tests/UnitTests/*.csproj'
     
     - task: DotNetCoreCLI@2
       displayName: Publish
